@@ -11,7 +11,6 @@ class CartPoleMDP:
         self.n_bins = n_bins
         self.env = gym.make('CartPole-v1')
 
-        # MDP KOMPONENTŲ APIBRĖŽIMAS
         self.pos_bins = np.linspace(-2.4, 2.4, n_bins)
         self.vel_bins = np.linspace(-3, 3, n_bins)
         self.ang_bins = np.linspace(-0.2095, 0.2095, n_bins)
@@ -23,9 +22,14 @@ class CartPoleMDP:
         # MDP struktūros
         self.transitions = defaultdict(list)
         self.rewards = defaultdict(list)
+        #tikimybė patekti į būseną s' iš būsenos s atlikus veiksmą a
         self.P = {}  # P(s'|s,a)
+        #atlygis už perėjimą iš būsenos s į s' atlikus veiksmą a
         self.R = {}  # R(s,a,s')
+
+        # būsenų vertinimas
         self.V = {}  # V*(s)
+        # sprendimų strategija
         self.policy = {}  # π*(s)
 
         # APLINKOS TYRINĖJIMAS IR MODELIO KŪRIMAS
@@ -99,6 +103,7 @@ class CartPoleMDP:
                 self.P[state][action][next_state] = prob
                 self.R[state][action][next_state] = avg_reward
 
+#suranda optimalią strategiją
     def value_iteration(self, gamma=0.95, theta=1e-4, max_iterations=1000):
         """VERTĖS ITERACIJOS ALGORITMAS"""
         print("🔄 VERTĖS ITERACIJA:")
@@ -225,7 +230,6 @@ class CartPoleMDP:
         plt.show()
 
     def demo_optimal_policy(self, n_episodes=2):
-        """Demonstracija su vizualiu"""
         print("🎮 DEMONSTRACIJA:")
         demo_env = gym.make('CartPole-v1', render_mode='human')
 
@@ -250,7 +254,7 @@ class CartPoleMDP:
         self.env.close()
 
 
-# VYKDYMAS
+
 if __name__ == "__main__":
     # 1. Sukurti MDP ir rasti π*
     mdp = CartPoleMDP(n_bins=6, n_episodes=2000)
